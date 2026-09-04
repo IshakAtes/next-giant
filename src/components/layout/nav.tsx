@@ -3,25 +3,51 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { Magnetic } from "@/components/interactive/magnetic";
+import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/ui/brand-logo";
 import { cn } from "@/lib/utils";
 
-const LINKS = [
-  { href: "#work", label: "Arbeiten" },
-  { href: "#services", label: "Leistungen" },
-  { href: "#why", label: "Über uns" },
-  { href: "#contact", label: "Kontakt" },
+const links = [
+  { href: "#leistungen", label: "Leistungen" },
+  { href: "#projekte", label: "Projekte" },
+  { href: "#ueber-uns", label: "Über uns" },
+  { href: "#einblicke", label: "Einblicke" },
+  { href: "#kontakt", label: "Kontakt" },
 ];
 
 export function Nav() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    let frame = 0;
+
+    const updateNavSurface = () => {
+      frame = 0;
+      const nextSection = document.querySelector<HTMLElement>("#leistungen");
+      const navHeight = 72;
+
+      setScrolled(
+        nextSection
+          ? nextSection.getBoundingClientRect().top <= navHeight
+          : false,
+      );
+    };
+
+    const scheduleUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateNavSurface);
+    };
+
+    updateNavSurface();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
   }, []);
 
   useEffect(() => {
@@ -35,100 +61,109 @@ export function Nav() {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-colors duration-500",
+          "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:duration-0",
           scrolled || open
-            ? "border-line bg-bg/85 border-b backdrop-blur-md"
-            : "border-b border-transparent bg-transparent",
+            ? "border-line bg-bg/92 shadow-[0_8px_30px_rgba(28,28,28,0.04)] backdrop-blur-xl"
+            : "border-transparent bg-transparent shadow-none backdrop-blur-none",
         )}
       >
-        <div className="container-edge flex h-18 items-center justify-between py-5">
+        <div className="container-edge flex h-18 items-center justify-between">
           <Link
             href="#top"
-            className="font-display text-lg font-semibold tracking-tight"
-            data-cursor="Start"
+            className="group"
+            aria-label="NextGiant – Startseite"
           >
-            NEXT<span className="text-accent">GIANT</span>
+            <BrandLogo className="text-[1.75rem] transition-transform duration-500 group-hover:translate-x-0.5" />
           </Link>
 
-          <nav className="hidden items-center gap-8 lg:flex xl:gap-10">
-            {LINKS.map((link) => (
+          <nav
+            className="hidden items-center gap-7 lg:flex xl:gap-10"
+            aria-label="Hauptnavigation"
+          >
+            {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="group text-muted hover:text-fg relative font-mono text-xs tracking-wide uppercase transition-colors"
+                className="group text-fg/75 hover:text-fg relative py-2 text-[13px] font-medium transition-colors"
               >
                 {link.label}
-                <span className="bg-accent ease-out-quart absolute -bottom-1 left-0 h-px w-0 transition-all duration-300 group-hover:w-full" />
+                <span className="bg-accent absolute inset-x-0 bottom-0 h-px origin-right scale-x-0 transition-transform duration-300 group-hover:origin-left group-hover:scale-x-100" />
               </Link>
             ))}
           </nav>
 
-          <div className="hidden lg:block">
-            <Magnetic strength={0.3}>
-              <Link
-                href="#contact"
-                data-cursor="Los"
-                className="border-line-strong hover:border-fg inline-flex items-center gap-2 border px-5 py-2.5 font-mono text-xs tracking-wide uppercase transition-colors"
-              >
-                Projekt starten
-              </Link>
-            </Magnetic>
-          </div>
+          <Button href="#kontakt" size="compact" className="hidden lg:block">
+            Projekt starten
+          </Button>
 
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
+            aria-controls="mobile-navigation"
             aria-label={open ? "Menü schließen" : "Menü öffnen"}
-            className="relative z-10 flex h-9 w-9 flex-col items-center justify-center gap-1.5 lg:hidden"
+            className="border-line-strong hover:border-accent relative flex h-11 w-11 items-center justify-center border bg-white/70 transition-[border-color,transform] duration-300 [clip-path:polygon(0_0,calc(100%_-_9px)_0,100%_9px,100%_100%,0_100%)] active:scale-[0.97] lg:hidden"
           >
             <span
               className={cn(
-                "bg-fg h-px w-6 transition-transform duration-300",
-                open && "translate-y-[3.5px] rotate-45",
+                "bg-accent absolute h-px w-5 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none",
+                open ? "rotate-45" : "-translate-y-1.5",
               )}
             />
             <span
               className={cn(
-                "bg-fg h-px w-6 transition-transform duration-300",
-                open && "-translate-y-[3.5px] -rotate-45",
+                "bg-fg absolute h-px w-5 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:transition-none",
+                open ? "-rotate-45" : "translate-y-1.5",
               )}
             />
           </button>
         </div>
       </header>
 
-      {/* Rendered as a header sibling, not a descendant: the header's
-          backdrop-blur (once scrolled) establishes a containing block for
-          fixed descendants, which would otherwise hijack this panel's
-          viewport-relative positioning. */}
       <div
+        id="mobile-navigation"
         className={cn(
-          "bg-bg ease-out-expo fixed inset-0 top-18 z-50 flex flex-col justify-between px-6 pt-10 pb-10 transition-transform duration-500 lg:hidden",
-          open ? "translate-y-0" : "-translate-y-[110%]",
+          "bg-bg fixed inset-0 z-40 flex flex-col px-4 pt-24 pb-6 transition-all duration-500 lg:hidden",
+          open
+            ? "visible translate-y-0 opacity-100"
+            : "invisible -translate-y-4 opacity-0",
         )}
       >
-        <nav className="flex flex-col gap-2">
-          {LINKS.map((link, i) => (
+        <nav className="border-line border-t" aria-label="Mobile Navigation">
+          {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="border-line font-display border-b py-5 text-4xl"
-              style={{ transitionDelay: `${i * 40}ms` }}
+              className="border-line font-display flex min-h-16 items-center justify-between border-b text-[clamp(1.75rem,8vw,2.5rem)]"
             >
               {link.label}
+              <Arrow className="text-accent h-5 w-5" />
             </Link>
           ))}
         </nav>
-        <Link
-          href="#contact"
+        <Button
+          href="#kontakt"
           onClick={() => setOpen(false)}
-          className="bg-accent text-accent-fg flex items-center justify-center py-4 font-mono text-sm tracking-wide uppercase"
+          className="mt-auto block w-full lg:hidden [&>a]:w-full"
         >
           Projekt starten
-        </Link>
+        </Button>
       </div>
     </>
+  );
+}
+
+function Arrow({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 16 16" className={className} fill="none">
+      <path
+        d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

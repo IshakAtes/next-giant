@@ -1,97 +1,97 @@
-"use client";
+import Image from "next/image";
 
-import { useRef, useState } from "react";
-
-import { ProjectVisual } from "@/components/visuals/project-visual";
-import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
-import { gsap } from "@/lib/gsap";
+import { Reveal } from "@/components/ui/reveal";
 import { work } from "@/lib/data";
-import { cn } from "@/lib/utils";
 
 export function SelectedWork() {
-  const [active, setActive] = useState(0);
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  useIsomorphicLayoutEffect(() => {
-    const el = panelRef.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    gsap.fromTo(
-      el,
-      { opacity: 0, scale: 1.04 },
-      { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" },
-    );
-  }, [active]);
-
   return (
-    <section id="work" className="border-line relative border-t">
-      <div className="container-edge flex items-center justify-between pt-16 pb-10 md:pt-24 md:pb-14">
-        <div className="text-muted flex items-center gap-3 font-mono text-xs tracking-[0.2em] uppercase">
-          <span className="bg-accent h-px w-8" />
-          Ausgewählte Arbeiten
-        </div>
-        <span className="text-muted-2 font-mono text-xs tracking-widest">
-          {String(active + 1).padStart(2, "0")} /{" "}
-          {String(work.length).padStart(2, "0")}
-        </span>
-      </div>
+    <section
+      id="projekte"
+      className="section-shell border-line border-t bg-white"
+    >
+      <div className="container-edge">
+        <Reveal className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <p className="section-kicker">Ausgewählte Projekte</p>
+            <h2 className="font-display text-h1 mt-5 max-w-4xl leading-[1.02] tracking-[-0.035em]">
+              Echte Projekte.
+              <br />
+              Echte digitale Lösungen.
+            </h2>
+          </div>
+          <p className="text-muted max-w-sm text-sm leading-6 lg:text-right">
+            Unterschiedliche Branchen, eine Haltung: klare Nutzerführung,
+            präzise Gestaltung und Technik, die im Alltag funktioniert.
+          </p>
+        </Reveal>
 
-      <div className="container-edge grid gap-12 pb-20 lg:grid-cols-[1fr_1fr] lg:gap-16 lg:pb-28">
-        {/* index list */}
-        <ul className="border-line border-t lg:sticky lg:top-24 lg:self-start">
-          {work.map((item, i) => (
-            <li key={item.index} className="border-line border-b">
-              <a
-                href="#"
-                data-cursor="Projekt ansehen"
-                onMouseEnter={() => setActive(i)}
-                onFocus={() => setActive(i)}
-                className="group flex w-full items-baseline gap-4 py-6 md:py-7"
-              >
-                <span
-                  className={cn(
-                    "font-mono text-sm transition-colors",
-                    active === i ? "text-accent" : "text-muted-2",
-                  )}
-                >
-                  {item.index}
-                </span>
-                <span className="flex-1">
-                  <span
-                    className={cn(
-                      "font-display block text-3xl font-semibold tracking-tight transition-colors sm:text-4xl md:text-5xl",
-                      active === i ? "text-fg" : "text-muted-2 group-hover:text-fg/70",
-                    )}
+        <div className="mt-12 grid min-w-0 gap-5 lg:grid-cols-3">
+          {work.slice(0, 3).map((item, index) => (
+            <Reveal
+              key={item.index}
+              delay={index * 0.07}
+              className="h-full min-w-0"
+            >
+              <article className="surface-card group relative flex h-full w-full max-w-full min-w-0 flex-col overflow-hidden rounded-[1.15rem] transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_rgba(39,36,29,0.12)]">
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={`${item.name} – ${item.category}`}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 33vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+                    />
+                  ) : null}
+                  <span className="text-fg absolute top-4 left-4 rounded-full bg-white/88 px-3 py-1.5 text-[10px] font-bold tracking-[0.13em] uppercase shadow-sm backdrop-blur">
+                    {item.year}
+                  </span>
+                </div>
+
+                <div className="flex flex-1 items-start justify-between gap-5 p-5 sm:p-6">
+                  <div className="min-w-0">
+                    <p className="text-muted text-[11px] font-semibold tracking-[0.12em] uppercase">
+                      {item.industry}
+                    </p>
+                    <h3 className="font-display mt-2 text-2xl tracking-[-0.025em] sm:text-3xl">
+                      {item.name}
+                    </h3>
+                    <p className="text-muted mt-3 text-sm leading-6 break-words">
+                      {item.category}
+                    </p>
+                  </div>
+                  <a
+                    href="#kontakt"
+                    aria-label={`${item.name} besprechen`}
+                    className="group/action border-line-strong text-accent hover:border-accent focus-visible:outline-accent relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden border bg-white transition-colors duration-500 [clip-path:polygon(0_0,calc(100%_-_9px)_0,100%_9px,100%_100%,0_100%)] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-3"
                   >
-                    {item.name}
-                  </span>
-                  <span className="text-muted mt-1 block font-mono text-[11px] tracking-widest uppercase">
-                    {item.industry} — {item.category}
-                  </span>
-                </span>
-                <span className="text-muted-2 hidden font-mono text-xs sm:block">
-                  {item.year}
-                </span>
-              </a>
-
-              {/* mobile preview, inline under each row */}
-              <div className="pb-6 lg:hidden">
-                <ProjectVisual
-                  item={item}
-                  className="aspect-[4/3] w-full border border-line"
+                    <span
+                      aria-hidden
+                      className="bg-accent absolute inset-0 origin-bottom scale-y-0 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover/action:scale-y-100 motion-reduce:transition-none"
+                    />
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 16 16"
+                      className="relative z-10 h-4 w-4 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover/action:translate-x-0.5 motion-reduce:transform-none"
+                      fill="none"
+                    >
+                      <path
+                        d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
+                      />
+                    </svg>
+                  </a>
+                </div>
+                <span
+                  aria-hidden
+                  className="bg-accent absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100"
                 />
-              </div>
-            </li>
+              </article>
+            </Reveal>
           ))}
-        </ul>
-
-        {/* sticky preview */}
-        <div
-          ref={panelRef}
-          className="border-line relative hidden aspect-[4/5] overflow-hidden border lg:sticky lg:top-24 lg:block lg:self-start"
-        >
-          <ProjectVisual item={work[active]!} className="h-full w-full" />
         </div>
       </div>
     </section>

@@ -1,207 +1,116 @@
 "use client";
 
-import { useState } from "react";
+import Image from "next/image";
+import { useRef } from "react";
 
-import { Magnetic } from "@/components/interactive/magnetic";
-import { Reveal } from "@/components/ui/reveal";
-import { projectTypes } from "@/lib/data";
-import { cn } from "@/lib/utils";
-
-const fieldClass =
-  "peer w-full border-b border-line bg-transparent py-3 text-lg text-fg placeholder-transparent outline-none transition-colors focus:border-accent";
-const labelClass =
-  "pointer-events-none absolute left-0 top-3 font-mono text-xs uppercase tracking-widest text-muted transition-all peer-focus:-top-4 peer-focus:text-[10px] peer-focus:text-accent peer-[:not(:placeholder-shown)]:-top-4 peer-[:not(:placeholder-shown)]:text-[10px]";
+import { Button } from "@/components/ui/button";
+import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
+import { gsap } from "@/lib/gsap";
 
 export function Contact() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
+  const sectionRef = useRef<HTMLElement>(null);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("sent");
-  }
+  useIsomorphicLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const context = gsap.context(() => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      gsap.fromTo(
+        ".cta-copy > *",
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.85,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 72%",
+            once: true,
+          },
+        },
+      );
+
+      gsap.fromTo(
+        ".cta-mountain",
+        { scale: 1.08, xPercent: 2 },
+        {
+          scale: 1,
+          xPercent: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.8,
+          },
+        },
+      );
+    }, section);
+
+    return () => context.revert();
+  }, []);
 
   return (
     <section
-      id="contact"
-      className="relative overflow-hidden border-t border-line py-24 md:py-32"
+      ref={sectionRef}
+      id="kontakt"
+      className="border-line relative overflow-hidden border-y bg-[#121412] text-white"
     >
+      <div className="cta-mountain absolute inset-y-0 right-0 w-full">
+        <Image
+          src="/images/nextgiant/cta-giants.webp"
+          alt="Ein Mann geht auf die freie Stelle zwischen vier Giganten am Berggipfel zu"
+          fill
+          sizes="100vw"
+          className="object-cover object-[76%_center] opacity-70 sm:object-center sm:opacity-80"
+        />
+      </div>
+
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(60% 50% at 85% 0%, rgba(255,106,46,0.16), transparent 70%)",
-        }}
+        className="absolute inset-0 bg-[linear-gradient(90deg,#121412_0%,rgba(18,20,18,.98)_34%,rgba(18,20,18,.72)_58%,rgba(18,20,18,.12)_100%)] max-sm:bg-[linear-gradient(180deg,#121412_0%,rgba(18,20,18,.94)_48%,rgba(18,20,18,.35)_100%)]"
+      />
+      <div
+        aria-hidden
+        className="border-accent/70 absolute top-0 left-[var(--container-pad)] h-24 border-l"
       />
 
-      <div className="container-edge relative">
-        <Reveal className="mb-6 flex items-center gap-3 font-mono text-xs tracking-[0.2em] text-muted uppercase md:mb-8">
-          <span className="h-px w-8 bg-accent" />
-          Kontakt
-        </Reveal>
-
-        <Reveal className="max-w-4xl">
-          <h2 className="font-display text-display leading-[0.95] font-semibold tracking-tight text-balance">
-            Bereit, zum{" "}
-            <span className="text-molten">Giganten zu werden?</span>
-          </h2>
-          <p className="mt-6 max-w-lg text-lg text-muted">
-            Erzählen Sie uns von Ihrer Marke und wohin sie sich entwickeln
-            soll. Wir melden uns innerhalb eines Werktags.
+      <div className="container-edge relative z-10 flex min-h-[40rem] items-center py-20 sm:min-h-[38rem] lg:min-h-[42rem]">
+        <div className="cta-copy max-w-[49rem]">
+          <p className="text-accent text-[11px] font-bold tracking-[0.2em] uppercase">
+            Ihr nächster Schritt
           </p>
-        </Reveal>
-
-        <div className="mt-16 grid gap-16 lg:grid-cols-[1fr_0.6fr] lg:gap-24">
-          <Reveal>
-            {status === "sent" ? (
-              <div className="flex min-h-[320px] flex-col justify-center border-t border-line">
-                <p className="font-display text-3xl font-semibold">
-                  Nachricht erhalten.
-                </p>
-                <p className="mt-3 max-w-sm text-muted">
-                  Danke für Ihre Nachricht — wir melden uns in Kürze, um Ihr
-                  Projekt zu besprechen.
-                </p>
-              </div>
-            ) : (
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-col gap-8 border-t border-line pt-10"
-              >
-                <div className="grid gap-8 sm:grid-cols-2">
-                  <Field label="Name" name="name" required />
-                  <Field label="Unternehmen" name="company" />
-                </div>
-                <div className="grid gap-8 sm:grid-cols-2">
-                  <Field label="E-Mail" name="email" type="email" required />
-                  <Field label="Aktuelle Website" name="website" type="url" />
-                </div>
-
-                <div className="relative">
-                  <span className="mb-3 block font-mono text-xs tracking-widest text-muted uppercase">
-                    Projektart
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {projectTypes.map((type) => (
-                      <label
-                        key={type}
-                        className="border-line-strong text-muted has-checked:border-accent has-checked:bg-accent has-checked:text-accent-fg cursor-pointer border px-4 py-2 font-mono text-xs tracking-wide uppercase transition-colors"
-                      >
-                        <input
-                          type="radio"
-                          name="projectType"
-                          value={type}
-                          className="sr-only"
-                        />
-                        {type}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={3}
-                    required
-                    placeholder=" "
-                    className={cn(fieldClass, "resize-none")}
-                  />
-                  <label htmlFor="message" className={labelClass}>
-                    Nachricht
-                  </label>
-                </div>
-
-                <Magnetic strength={0.25} className="mt-4 self-start">
-                  <button
-                    type="submit"
-                    data-cursor="Senden"
-                    className="bg-accent text-accent-fg hover:bg-fg inline-flex items-center gap-3 px-8 py-4 font-mono text-xs tracking-wide uppercase transition-colors"
-                  >
-                    Nachricht senden
-                    <span aria-hidden>→</span>
-                  </button>
-                </Magnetic>
-              </form>
-            )}
-          </Reveal>
-
-          <Reveal
-            delay={0.15}
-            className="flex flex-col justify-between gap-14 border-t border-line pt-10 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-16"
-          >
-            <div>
-              <p className="mb-3 font-mono text-xs tracking-widest text-muted uppercase">
-                E-Mail
-              </p>
-              <a
-                href="mailto:hello@nextgiant.de"
-                className="font-display text-2xl font-medium hover:text-accent"
-              >
-                hello@nextgiant.de
-              </a>
-            </div>
-
-            <div>
-              <p className="mb-3 font-mono text-xs tracking-widest text-muted uppercase">
-                Folgen
-              </p>
-              <ul className="flex flex-col gap-1">
-                {["Instagram", "LinkedIn", "X / Twitter"].map((social) => (
-                  <li key={social}>
-                    <a
-                      href="#"
-                      className="inline-block py-1 text-lg text-muted transition-colors hover:text-fg"
-                    >
-                      {social}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <p className="mb-3 font-mono text-xs tracking-widest text-muted uppercase">
-                Verfügbarkeit
-              </p>
-              <p className="flex items-center gap-2 text-lg">
-                <span className="h-2 w-2 rounded-full bg-accent" />
-                Verfügbar für Projekte ab Q1 2026
-              </p>
-            </div>
-          </Reveal>
+          <h2 className="font-display mt-7 text-[clamp(3.25rem,7.1vw,7.8rem)] leading-[0.86] tracking-[-0.06em]">
+            Wir machen Sie
+            <br />
+            zum <span className="text-accent">Giganten.</span>
+          </h2>
+          <p className="mt-8 max-w-lg text-sm leading-6 text-white/68 sm:text-base sm:leading-7">
+            Ob Website, Webanwendung oder KI-Automatisierung – wir entwickeln
+            digitale Lösungen, die Ihr Unternehmen sichtbar größer machen.
+          </p>
+          <div className="mt-9 flex flex-col items-stretch gap-4 min-[430px]:flex-row min-[430px]:items-center">
+            <Button
+              href="mailto:hello@nextgiant.de"
+              className="w-full min-[430px]:w-auto [&>a]:w-full"
+            >
+              Projekt unverbindlich besprechen
+            </Button>
+            <a
+              href="mailto:hello@nextgiant.de"
+              className="hover:text-accent text-sm text-white/72 underline decoration-white/25 transition-colors"
+            >
+              hello@nextgiant.de
+            </a>
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type = "text",
-  required,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  required?: boolean;
-}) {
-  return (
-    <div className="relative">
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required={required}
-        placeholder=" "
-        className={fieldClass}
-      />
-      <label htmlFor={name} className={labelClass}>
-        {label}
-        {required ? " *" : ""}
-      </label>
-    </div>
   );
 }

@@ -5,48 +5,36 @@ export interface WorkItem {
   industry: string;
   year: string;
   palette: [string, string, string];
+  image?: string;
 }
 
 export const work: WorkItem[] = [
   {
     index: "01",
-    name: "Noctuelle",
-    category: "Markenwebsite & Reservierungen",
-    industry: "Luxus-Restaurant",
-    year: "2025",
-    palette: ["#1a1210", "#c98a4b", "#f4e9d8"],
+    name: "Café de Lokma",
+    category: "Website · Digitale Speisekarte · Markenauftritt",
+    industry: "Gastronomie",
+    year: "Website",
+    palette: ["#1c0c14", "#d94b7c", "#fdecf2"],
+    image: "/images/projects/cafe-de-lokma.jpg",
   },
   {
     index: "02",
-    name: "Velar Motors",
-    category: "Digitales Erlebnis",
-    industry: "Automobilbranche",
-    year: "2025",
+    name: "Autohaus",
+    category: "Website · Fahrzeugpräsentation · Leadgenerierung",
+    industry: "Automotive",
+    year: "Website",
     palette: ["#0b0e12", "#3a5a78", "#dfe6ea"],
+    image: "/images/projects/velar-motors.jpg",
   },
   {
     index: "03",
-    name: "Meridian House",
-    category: "Web-Plattform",
-    industry: "Architektur & Immobilien",
-    year: "2024",
-    palette: ["#12110d", "#a68a5b", "#efe8da"],
-  },
-  {
-    index: "04",
-    name: "Auric",
-    category: "E-Commerce-Erlebnis",
-    industry: "Premium-Kosmetik",
-    year: "2024",
-    palette: ["#170f14", "#b3667f", "#f2dfe4"],
-  },
-  {
-    index: "05",
-    name: "Sator Systems",
-    category: "Produkt & Web-App",
-    industry: "Technologie",
-    year: "2024",
+    name: "B2B Plattform",
+    category: "Webanwendung · Prozesse · Automatisierung",
+    industry: "Business Software",
+    year: "Web-App",
     palette: ["#0a0d0c", "#3f7a63", "#dcece4"],
+    image: "/images/projects/sator-systems.jpg",
   },
 ];
 
@@ -61,35 +49,35 @@ export interface Service {
 export const services: Service[] = [
   {
     index: "01",
-    name: "Kreative Websites",
+    name: "Websites",
     short: "Websites",
     description:
-      "Hochwertige Marketing- und Markenwebsites, aufgebaut um eine starke Idee — außergewöhnliches Design, Bewegung und Interaktion vom ersten Pixel an.",
-    tools: ["Design-Systeme", "Next.js", "Art Direction", "CMS"],
+      "Moderne, schnelle und conversion-orientierte Websites, die Ihre Marke klar positionieren und messbar besser verkaufen.",
+    tools: ["Strategie", "UX & UI", "Next.js", "SEO"],
   },
   {
     index: "02",
-    name: "Digitale Erlebnisse",
-    short: "Erlebnisse",
+    name: "Webanwendungen",
+    short: "Webanwendungen",
     description:
-      "3D, WebGL und bewegungsgetriebene Markenerlebnisse, die aus einer Website etwas machen, an das man sich erinnert und worüber man spricht.",
-    tools: ["WebGL", "Three.js", "GSAP", "Shader"],
+      "Individuelle Software, Plattformen und Dashboards, die komplexe Abläufe vereinfachen und mit Ihrem Unternehmen wachsen.",
+    tools: ["Business Software", "Dashboards", "APIs", "Portale"],
   },
   {
     index: "03",
-    name: "Web-Anwendungen",
-    short: "Anwendungen",
+    name: "KI-Automatisierung",
+    short: "KI-Automatisierung",
     description:
-      "Individuelle Plattformen, Konfiguratoren und digitale Produkte, gebaut für Wachstum — vom ersten Prototyp bis zum produktiven System.",
-    tools: ["React", "TypeScript", "APIs", "Dashboards"],
+      "AI Agents und intelligente Automationen, die Routinearbeit reduzieren, Systeme verbinden und Teams produktiver machen.",
+    tools: ["AI Agents", "Workflows", "Integrationen", "Prozesse"],
   },
   {
     index: "04",
-    name: "KI & Automatisierung",
-    short: "Automatisierung",
+    name: "Wachstum",
+    short: "Wachstum",
     description:
-      "KI-gestützte Workflows, Agenten und interne Tools, die Routinearbeit abnehmen und Teams auf ein neues Level heben.",
-    tools: ["Agenten", "Workflows", "Integrationen", "LLMs"],
+      "SEO, digitale Sichtbarkeit und datenbasierte Strategien, damit aus einer starken Lösung nachhaltiges Wachstum entsteht.",
+    tools: ["SEO", "Sichtbarkeit", "Leads", "Strategie"],
   },
 ];
 
@@ -102,33 +90,27 @@ export interface ProcessStep {
 export const process: ProcessStep[] = [
   {
     index: "01",
-    name: "Analyse",
+    name: "Beratung",
     description:
-      "Wir analysieren Ihre Marke, Ihren Markt und Ihren Wettbewerb, um den Ansatz zu finden, der Sie unübersehbar macht.",
+      "Wir klären Ziele, Zielgruppen und Prozesse – und priorisieren, was für Ihr Unternehmen den größten Hebel hat.",
   },
   {
     index: "02",
-    name: "Design",
+    name: "Konzeption",
     description:
-      "Eine eigenständige Bildsprache entsteht von Grund auf — Typografie, Layout, Bewegung und visuelle Sprache als ein System.",
+      "Strategie, Nutzerführung, Design und technische Architektur werden zu einem belastbaren Konzept.",
   },
   {
     index: "03",
-    name: "Umsetzung",
+    name: "Entwicklung",
     description:
-      "Entwicklung mit derselben Sorgfalt wie das Design. Schnell, zugänglich und auf einem Stack gebaut, der mit Ihrem Unternehmen wächst.",
+      "Wir entwickeln performant, zugänglich und sauber – mit transparenten Zwischenständen und kurzen Wegen.",
   },
   {
     index: "04",
-    name: "Launch",
+    name: "Launch & Wachstum",
     description:
-      "Ein kontrollierter, getesteter Launch — Performance, SEO und jedes Endgerät geprüft, bevor die Welt es sieht.",
-  },
-  {
-    index: "05",
-    name: "Wachstum",
-    description:
-      "Wir iterieren auch nach dem Launch weiter — messen, verfeinern und treiben das Erlebnis voran, während Ihre Marke wächst.",
+      "Nach dem getesteten Launch optimieren wir Sichtbarkeit, Systeme und Wirkung kontinuierlich weiter.",
   },
 ];
 

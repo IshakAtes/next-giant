@@ -1,55 +1,33 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Geist_Mono, Inter } from "next/font/google";
-import Script from "next/script";
+import localFont from "next/font/local";
 import "./globals.css";
 
 import { Cursor } from "@/components/interactive/cursor";
 import { Nav } from "@/components/layout/nav";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const geist = localFont({
+  src: "./fonts/geist-latin.woff2",
+  variable: "--font-geist",
+  display: "swap",
+  weight: "100 900",
 });
 
 export const metadata: Metadata = {
-  title: "NextGiant — Premium Kreativagentur",
+  title: "NextGiant — Websites, Webanwendungen & KI-Automatisierung",
   description:
-    "Wir bauen keine gewöhnlichen Websites. Wir machen Sie zum Giganten. NextGiant entwickelt Premium-Websites, interaktive digitale Erlebnisse, Web-Anwendungen und KI-Automatisierung für Marken, die unübersehbar sein wollen.",
+    "NextGiant entwickelt hochwertige Websites, individuelle Webanwendungen und KI-Automatisierungen für ambitionierte Unternehmen.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="de"
-      className={`${bricolage.variable} ${inter.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col bg-bg text-fg">
+    <html lang="de" className={`${geist.variable} h-full antialiased`}>
+      <body className="bg-bg text-fg flex min-h-full flex-col">
         <SmoothScroll>
           <Cursor />
           <Nav />
           {children}
         </SmoothScroll>
-        <Script id="chtl-config" strategy="afterInteractive">
-          {`window.chtlConfig = { chatbotId: "4744344596" };`}
-        </Script>
-        <Script
-          id="chtl-script"
-          src="https://chatling.ai/js/embed.js"
-          data-id="4744344596"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );

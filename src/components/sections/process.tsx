@@ -1,147 +1,153 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
+import { Reveal } from "@/components/ui/reveal";
 import { useIsomorphicLayoutEffect } from "@/hooks/useIsomorphicLayoutEffect";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { process } from "@/lib/data";
-import { cn } from "@/lib/utils";
 
 export function Process() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [active, setActive] = useState(0);
+  const desktopLineRef = useRef<HTMLDivElement>(null);
+  const mobileLineRef = useRef<HTMLDivElement>(null);
 
   useIsomorphicLayoutEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const ctx = gsap.context(() => {
-      if (
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-        window.matchMedia("(max-width: 767px)").matches
-      ) {
-        return;
-      }
+    const context = gsap.context(() => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: () => `+=${window.innerHeight * (process.length - 1) * 0.85}`,
-        scrub: 0.6,
-        pin: true,
-        onUpdate: (self) => {
-          const idx = Math.min(
-            process.length - 1,
-            Math.floor(self.progress * process.length),
-          );
-          setActive(idx);
+      gsap.fromTo(
+        desktopLineRef.current,
+        { scaleX: 0 },
+        {
+          scaleX: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 68%",
+            end: "bottom 58%",
+            scrub: 0.5,
+          },
+        },
+      );
+
+      gsap.fromTo(
+        mobileLineRef.current,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 72%",
+            end: "bottom 70%",
+            scrub: 0.5,
+          },
+        },
+      );
+
+      gsap.from(".process-step", {
+        opacity: 0,
+        y: 28,
+        duration: 0.75,
+        stagger: 0.12,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".process-grid",
+          start: "top 78%",
+          once: true,
         },
       });
     }, section);
 
-    return () => ctx.revert();
+    return () => context.revert();
   }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="border-line relative flex min-h-[100svh] flex-col justify-center overflow-hidden border-t py-24"
+      id="einblicke"
+      className="section-shell border-line border-t bg-white"
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 hidden items-center justify-end select-none lg:flex"
-      >
-        {process.map((step, i) => (
-          <span
-            key={step.index}
-            className={cn(
-              "font-display text-fg/[0.035] absolute text-[42vw] leading-none font-semibold transition-opacity duration-700",
-              i === active ? "opacity-100" : "opacity-0",
-            )}
-            style={{ right: "-4vw" }}
-          >
-            {step.index}
-          </span>
-        ))}
-      </div>
+      <div className="container-edge">
+        <Reveal>
+          <p className="section-kicker">Unser Prozess</p>
+          <h2 className="font-display text-h1 mt-5 max-w-4xl leading-[1.02] tracking-[-0.035em]">
+            Von der Idee zur erfolgreichen Lösung.
+          </h2>
+        </Reveal>
 
-      <div className="container-edge relative z-10 w-full">
-        <div className="text-muted mb-14 flex items-center gap-3 font-mono text-xs tracking-[0.2em] uppercase md:mb-20">
-          <span className="bg-accent h-px w-8" />
-          Ablauf
-        </div>
-
-        <div className="grid gap-14 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-24">
-          {/* level bar */}
-          <div className="hidden flex-col-reverse gap-1.5 lg:flex">
-            {process.map((step, i) => (
-              <div
-                key={step.index}
-                className={cn(
-                  "h-10 w-3 transition-colors duration-500",
-                  i <= active ? "bg-accent" : "bg-line-strong",
-                )}
-              />
-            ))}
+        <div className="process-grid relative mt-14 md:mt-20">
+          <div className="border-line absolute top-6 right-[12.5%] left-[12.5%] hidden border-t lg:block">
+            <div
+              ref={desktopLineRef}
+              className="bg-accent absolute -top-px left-0 h-[2px] w-full origin-left"
+            />
           </div>
 
-          <div>
-            {/* mobile: static stacked list */}
-            <ol className="divide-line border-line flex flex-col divide-y border-y lg:hidden">
-              {process.map((step) => (
-                <li key={step.index} className="py-6">
-                  <div className="mb-2 flex items-baseline gap-4">
-                    <span className="text-accent font-mono text-sm">
-                      {step.index}
-                    </span>
-                    <span className="font-display text-2xl font-semibold">
-                      {step.name}
-                    </span>
-                  </div>
-                  <p className="text-muted max-w-md">{step.description}</p>
-                </li>
-              ))}
-            </ol>
+          <div className="border-line absolute top-0 bottom-0 left-6 border-l lg:hidden">
+            <div
+              ref={mobileLineRef}
+              className="bg-accent absolute top-0 -left-px h-full w-[2px] origin-top"
+            />
+          </div>
 
-            {/* desktop: crossfading active step */}
-            <div className="relative hidden min-h-[220px] lg:block">
-              {process.map((step, i) => (
-                <div
-                  key={step.index}
-                  className={cn(
-                    "ease-out-quart absolute inset-0 transition-all duration-500",
-                    i === active
-                      ? "translate-y-0 opacity-100"
-                      : "pointer-events-none translate-y-4 opacity-0",
-                  )}
-                >
-                  <span className="text-accent mb-4 block font-mono text-sm">
-                    {step.index} / {String(process.length).padStart(2, "0")}
-                  </span>
-                  <h3 className="font-display text-h1 mb-5 leading-[0.95] font-semibold tracking-tight">
+          <ol className="grid gap-8 lg:grid-cols-4 lg:gap-6">
+            {process.map((step, index) => (
+              <li
+                key={step.index}
+                className="process-step relative grid grid-cols-[3rem_1fr] gap-5 lg:block"
+              >
+                <div className="bg-bg text-accent relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-[#ffc2b1] text-xs font-bold shadow-[0_8px_24px_rgba(255,79,31,0.1)] lg:mb-8">
+                  {step.index}
+                </div>
+                <div className="pb-5 lg:pb-0">
+                  <ProcessIcon index={index} />
+                  <h3 className="font-display mt-4 text-2xl tracking-[-0.025em]">
                     {step.name}
                   </h3>
-                  <p className="text-muted max-w-lg text-lg">
+                  <p className="text-muted mt-3 max-w-xs text-sm leading-6">
                     {step.description}
                   </p>
                 </div>
-              ))}
-            </div>
-
-            <ul className="mt-10 hidden gap-2 lg:flex">
-              {process.map((step, i) => (
-                <li
-                  key={step.index}
-                  className={cn(
-                    "h-1 flex-1 transition-colors duration-500",
-                    i <= active ? "bg-accent" : "bg-line-strong",
-                  )}
-                />
-              ))}
-            </ul>
-          </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>
+  );
+}
+
+function ProcessIcon({ index }: { index: number }) {
+  const paths = [
+    <path
+      key="users"
+      d="M7 18v-1.5A3.5 3.5 0 0 1 10.5 13h3a3.5 3.5 0 0 1 3.5 3.5V18M12 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM17 8.5a2.4 2.4 0 0 1 1.5 4.2M7 8.5a2.4 2.4 0 0 0-1.5 4.2"
+    />,
+    <path key="plan" d="M6 3h9l3 3v15H6V3Zm9 0v4h4M9 11h6M9 15h6" />,
+    <path key="code" d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />,
+    <path
+      key="launch"
+      d="M14 5c2-2 4.5-2 6-2-.1 1.8-.3 4.1-2.2 6L14 12.8 9.2 8 14 5Zm-5 5-3 .5L3.5 13 8 14M14 15l-.5 3-2.5 2.5L10 16M14 7h.01"
+    />,
+  ];
+
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      className="text-muted-2 h-6 w-6"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {paths[index]}
+    </svg>
   );
 }

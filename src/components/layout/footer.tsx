@@ -1,40 +1,90 @@
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/ui/brand-logo";
+
+const footerColumns = [
+  {
+    title: "Leistungen",
+    links: [
+      { label: "Websites", href: "#leistungen" },
+      { label: "Webanwendungen", href: "#leistungen" },
+      { label: "KI-Automatisierung", href: "#leistungen" },
+      { label: "Wachstum", href: "#ueber-uns" },
+    ],
+  },
+  {
+    title: "Unternehmen",
+    links: [
+      { label: "Über uns", href: "#ueber-uns" },
+      { label: "Projekte", href: "#projekte" },
+      { label: "Einblicke", href: "#prozess" },
+    ],
+  },
+  {
+    title: "Rechtliches",
+    links: [
+      {
+        label: "Impressum",
+        href: "mailto:hello@nextgiant.de?subject=Impressum",
+      },
+      {
+        label: "Datenschutz",
+        href: "mailto:hello@nextgiant.de?subject=Datenschutz",
+      },
+    ],
+  },
+];
+
 export function Footer() {
   return (
-    <footer className="on-flash border-line border-t">
-      <div className="container-edge flex flex-col gap-12 pt-16 pb-10 md:flex-row md:items-end md:justify-between md:pt-24">
+    <footer className="border-line border-t bg-white">
+      <div className="container-edge grid gap-14 py-16 md:grid-cols-[1.4fr_2fr] md:py-20 lg:gap-24">
         <div>
-          <p className="font-display text-fg text-3xl leading-[0.92] font-semibold tracking-tight sm:text-5xl">
-            Machen wir Sie
-            <br />
-            zum <span className="text-accent">Giganten</span>.
+          <Link
+            href="#top"
+            className="inline-flex"
+            aria-label="NextGiant – Startseite"
+          >
+            <BrandLogo className="text-[2rem]" />
+          </Link>
+          <p className="text-muted mt-5 max-w-xs text-sm leading-6">
+            Digitale Lösungen für ambitionierte Unternehmen – von der starken
+            Website bis zum automatisierten Geschäftsprozess.
           </p>
-          <p className="text-muted mt-5 max-w-xs text-sm">
-            Premium-Kreativagentur — Websites, digitale Erlebnisse,
-            Web-Anwendungen und KI-Automatisierung.
-          </p>
+          <a
+            href="mailto:hello@nextgiant.de"
+            className="decoration-accent/40 hover:text-accent mt-8 inline-block text-sm font-semibold underline transition-colors"
+          >
+            hello@nextgiant.de
+          </a>
         </div>
 
-        <nav className="text-muted flex flex-wrap gap-x-8 gap-y-3 font-mono text-xs tracking-widest uppercase">
-          <Link href="#work" className="hover:text-fg transition-colors">
-            Arbeiten
-          </Link>
-          <Link href="#services" className="hover:text-fg transition-colors">
-            Leistungen
-          </Link>
-          <Link href="#why" className="hover:text-fg transition-colors">
-            Über uns
-          </Link>
-          <Link href="#contact" className="hover:text-fg transition-colors">
-            Kontakt
-          </Link>
-        </nav>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3">
+          {footerColumns.map((column) => (
+            <nav key={column.title} aria-label={column.title}>
+              <p className="mb-5 text-xs font-semibold tracking-[0.14em] uppercase">
+                {column.title}
+              </p>
+              <ul className="text-muted space-y-3 text-sm">
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="hover:text-fg transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+        </div>
       </div>
 
-      <div className="border-line container-edge text-muted-2 flex flex-col gap-2 border-t py-6 font-mono text-[11px] tracking-widest uppercase md:flex-row md:items-center md:justify-between">
-        <span>© {new Date().getFullYear()} NextGiant. Alle Rechte vorbehalten.</span>
-        <span>Gestaltet &amp; entwickelt von NextGiant</span>
+      <div className="border-line container-edge text-muted-2 flex flex-col gap-2 border-t py-6 text-[11px] tracking-[0.08em] sm:flex-row sm:items-center sm:justify-between">
+        <span>© {new Date().getFullYear()} NextGiant GmbH</span>
+        <span>Strategie · Design · Technologie</span>
       </div>
     </footer>
   );
