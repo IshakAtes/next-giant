@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Geist_Mono, Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 import { Cursor } from "@/components/interactive/cursor";
@@ -40,6 +41,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Nav />
           {children}
         </SmoothScroll>
+        <Script id="chtl-config" strategy="afterInteractive">
+          {`window.chtlConfig = { chatbotId: "4744344596" };`}
+        </Script>
+        <Script
+          id="chtl-script"
+          src="https://chatling.ai/js/embed.js"
+          data-id="4744344596"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
