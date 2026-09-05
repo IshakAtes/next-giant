@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 import { Cursor } from "@/components/interactive/cursor";
+import { ContactDialog } from "@/components/interactive/contact-dialog";
 import { Nav } from "@/components/layout/nav";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="bg-bg text-fg flex min-h-full flex-col">
         <SmoothScroll>
           <Cursor />
+          <ContactDialog />
           <Nav />
           {children}
         </SmoothScroll>

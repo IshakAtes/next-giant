@@ -77,6 +77,34 @@ html {
   scroll-padding-top: 5rem;
   background: var(--bg);
   color-scheme: light;
+  scrollbar-color: rgb(18 20 18 / 45%) transparent;
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  min-height: 44px;
+  border-radius: 999px;
+  background: rgb(18 20 18 / 45%);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgb(18 20 18 / 72%);
+}
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html,
+  html * {
+    cursor: url("/cursors/nextgiant-pointer.svg") 2 2, auto !important;
+  }
 }
 
 body {
@@ -151,6 +179,268 @@ a {
   border: 1px solid var(--line);
   background: rgb(255 255 255 / 82%);
   box-shadow: var(--shadow-card);
+}
+
+.hero-foreground {
+  /* Match the photograph's cover crop at every breakpoint. The mask preserves
+     the original pixels instead of regenerating the man or the rock texture. */
+  mask-image: url("/images/nextgiant/hero-foreground-mask.svg");
+  mask-size: cover;
+  mask-position: 68% center;
+  mask-repeat: no-repeat;
+}
+
+.hero-rock-fill {
+  background-image:
+    linear-gradient(rgb(22 24 22 / 2%), rgb(10 12 10 / 12%)),
+    url("/images/nextgiant/hero-rock-fill.webp");
+  background-position: center top;
+  background-size: cover;
+  mask-image: linear-gradient(to bottom, transparent 0, #000 22svh, #000 100%);
+}
+
+.hero-jacket-breeze {
+  background-image: url("/images/nextgiant/hero-city.webp");
+  background-position: 68% center;
+  background-size: cover;
+  mask-image: radial-gradient(
+    ellipse 10% 20% at 82% 39%,
+    #000 16%,
+    rgb(0 0 0 / 72%) 48%,
+    transparent 74%
+  );
+  opacity: 0;
+  transform-origin: 82% 42%;
+  animation: jacket-breeze 9.5s var(--ease2) infinite;
+  will-change: transform, opacity;
+}
+
+.hero-wind-leaves {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-wind-leaves span {
+  position: absolute;
+  top: 34%;
+  left: -3%;
+  width: 8px;
+  height: 4px;
+  border-radius: 100% 0 100% 0;
+  background: rgb(76 70 43 / 78%);
+  opacity: 0;
+  filter: drop-shadow(0 1px 1px rgb(18 20 18 / 20%));
+  animation: wind-leaf 14s linear infinite;
+  will-change: transform, opacity;
+}
+
+.hero-wind-leaves span:nth-child(2) {
+  top: 43%;
+  width: 6px;
+  height: 3px;
+  animation-delay: -4.2s;
+  animation-duration: 17s;
+}
+
+.hero-wind-leaves span:nth-child(3) {
+  top: 27%;
+  background: rgb(112 91 48 / 72%);
+  animation-delay: -9.5s;
+  animation-duration: 19s;
+}
+
+.hero-wind-leaves span:nth-child(4) {
+  top: 52%;
+  width: 5px;
+  height: 3px;
+  animation-delay: -12.8s;
+  animation-duration: 16s;
+}
+
+.hero-wind-leaves span:nth-child(5) {
+  top: 37%;
+  width: 7px;
+  height: 3px;
+  background: rgb(91 78 47 / 74%);
+  animation-delay: -16.4s;
+  animation-duration: 21s;
+}
+
+@keyframes jacket-breeze {
+  0%,
+  34%,
+  62%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+
+  40% {
+    opacity: 0.62;
+    transform: translate3d(1.5px, -0.4px, 0) skewX(-0.32deg);
+  }
+
+  47% {
+    opacity: 0.74;
+    transform: translate3d(-0.8px, 0.4px, 0) skewX(0.2deg);
+  }
+
+  55% {
+    opacity: 0.48;
+    transform: translate3d(1px, 0, 0) skewX(-0.18deg);
+  }
+}
+
+@keyframes wind-leaf {
+  0%,
+  68% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  71% {
+    opacity: 0.78;
+  }
+
+  88% {
+    opacity: 0.62;
+  }
+
+  94%,
+  100% {
+    opacity: 0;
+    transform: translate3d(62vw, 10vh, 0) rotate(620deg);
+  }
+}
+
+@media (min-width: 640px) {
+  .hero-foreground {
+    mask-position: 62% center;
+  }
+
+  .hero-jacket-breeze {
+    background-position: 62% center;
+    mask-image: radial-gradient(
+      ellipse 9% 19% at 76% 40%,
+      #000 16%,
+      rgb(0 0 0 / 72%) 48%,
+      transparent 74%
+    );
+    transform-origin: 76% 43%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-foreground {
+    mask-position: center;
+  }
+
+  .hero-jacket-breeze {
+    background-position: center;
+    mask-image: radial-gradient(
+      ellipse 8% 18% at 76% 39%,
+      #000 16%,
+      rgb(0 0 0 / 72%) 48%,
+      transparent 74%
+    );
+    transform-origin: 76% 42%;
+  }
+}
+
+.hero-fog {
+  position: absolute;
+  right: -22%;
+  bottom: 3%;
+  width: 118%;
+  height: 34%;
+  opacity: 0.16;
+  filter: blur(18px);
+  background:
+    radial-gradient(
+      ellipse at 12% 58%,
+      rgb(255 255 255 / 82%) 0 9%,
+      transparent 29%
+    ),
+    radial-gradient(
+      ellipse at 39% 44%,
+      rgb(255 255 255 / 76%) 0 12%,
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 68% 60%,
+      rgb(255 255 255 / 70%) 0 13%,
+      transparent 36%
+    ),
+    radial-gradient(
+      ellipse at 91% 38%,
+      rgb(255 255 255 / 74%) 0 10%,
+      transparent 31%
+    );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 30%,
+    #000 74%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  transform: translate3d(-5%, 0, 0);
+  animation: hero-fog-drift 34s var(--ease2) infinite alternate;
+  will-change: transform, opacity;
+}
+
+.hero-fog--far {
+  right: -12%;
+  bottom: 24%;
+  width: 106%;
+  height: 25%;
+  opacity: 0.1;
+  filter: blur(25px);
+  animation-duration: 48s;
+  animation-direction: alternate-reverse;
+}
+
+.hero-fog--near {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 24%,
+    #000 68%,
+    transparent 100%
+  );
+}
+
+@keyframes hero-fog-drift {
+  0% {
+    transform: translate3d(-7%, 0, 0) scaleX(1.02);
+    opacity: 0.1;
+  }
+
+  52% {
+    opacity: 0.17;
+  }
+
+  100% {
+    transform: translate3d(7%, -1.5%, 0) scaleX(1.08);
+    opacity: 0.13;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-fog {
+    right: -48%;
+    bottom: -7%;
+    width: 165%;
+    height: 24%;
+    opacity: 0.065;
+    filter: blur(22px);
+  }
+
+  .hero-fog--far {
+    bottom: 5%;
+    opacity: 0.035;
+  }
 }
 
 @media (max-width: 374px) {

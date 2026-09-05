@@ -16,6 +16,13 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Contact form email delivery
+
+The contact form forwards submissions to `office@nextgiant.de` through
+FormSubmit. No API key is required. After changing the recipient address, submit
+the form once and confirm FormSubmit's activation email in that mailbox. Future
+submissions are then delivered automatically.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

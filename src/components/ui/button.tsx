@@ -10,6 +10,7 @@ interface ButtonProps {
   className?: string;
   cursorLabel?: string;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+  opensContactDialog?: boolean;
 }
 
 export function Button({
@@ -20,6 +21,7 @@ export function Button({
   className,
   cursorLabel,
   onClick,
+  opensContactDialog = false,
 }: ButtonProps) {
   const isPrimary = variant === "primary";
 
@@ -28,7 +30,14 @@ export function Button({
       <Link
         href={href}
         data-cursor={cursorLabel}
-        onClick={onClick}
+        data-contact-dialog={opensContactDialog ? "true" : undefined}
+        onClick={(event) => {
+          if (opensContactDialog) {
+            event.preventDefault();
+            window.dispatchEvent(new CustomEvent("open-contact-dialog"));
+          }
+          onClick?.(event);
+        }}
         className={cn(
           "group focus-visible:outline-accent relative isolate inline-flex items-center justify-center overflow-hidden border text-[13px] font-semibold tracking-[0.01em] transition-[color,border-color,box-shadow,transform] duration-500 ease-[cubic-bezier(.22,1,.36,1)] [clip-path:polygon(0_0,calc(100%_-_11px)_0,100%_11px,100%_100%,0_100%)] focus-visible:outline-2 focus-visible:outline-offset-4 active:scale-[0.985]",
           size === "compact"

@@ -68,13 +68,13 @@ export function Contact() {
           alt="Ein Mann geht auf die freie Stelle zwischen vier Giganten am Berggipfel zu"
           fill
           sizes="100vw"
-          className="object-cover object-[76%_center] opacity-70 sm:object-center sm:opacity-80"
+          className="object-cover object-[76%_center] opacity-95 brightness-[1.08] sm:object-center sm:opacity-100"
         />
       </div>
 
       <div
         aria-hidden
-        className="absolute inset-0 bg-[linear-gradient(90deg,#121412_0%,rgba(18,20,18,.98)_34%,rgba(18,20,18,.72)_58%,rgba(18,20,18,.12)_100%)] max-sm:bg-[linear-gradient(180deg,#121412_0%,rgba(18,20,18,.94)_48%,rgba(18,20,18,.35)_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(90deg,#121412_0%,rgba(18,20,18,.86)_28%,rgba(18,20,18,.38)_52%,transparent_100%)] max-sm:bg-[linear-gradient(180deg,rgba(18,20,18,.74)_0%,rgba(18,20,18,.45)_38%,rgba(18,20,18,.04)_100%)]"
       />
       <div
         aria-hidden
@@ -97,16 +97,17 @@ export function Contact() {
           </p>
           <div className="mt-9 flex flex-col items-stretch gap-4 min-[430px]:flex-row min-[430px]:items-center">
             <Button
-              href="mailto:hello@nextgiant.de"
+              href="mailto:office@nextgiant.de"
+              opensContactDialog
               className="w-full min-[430px]:w-auto [&>a]:w-full"
             >
               Projekt unverbindlich besprechen
             </Button>
             <a
-              href="mailto:hello@nextgiant.de"
+              href="mailto:office@nextgiant.de"
               className="hover:text-accent text-sm text-white/72 underline decoration-white/25 transition-colors"
             >
-              hello@nextgiant.de
+              office@nextgiant.de
             </a>
           </div>
         </div>

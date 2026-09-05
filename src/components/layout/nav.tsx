@@ -24,13 +24,24 @@ export function Nav() {
 
     const updateNavSurface = () => {
       frame = 0;
+      const hero = document.querySelector<HTMLElement>("#top");
       const nextSection = document.querySelector<HTMLElement>("#leistungen");
       const navHeight = 72;
+      const heroTravel = hero
+        ? Math.max(hero.offsetHeight - window.innerHeight, 1)
+        : 1;
+      const heroProgress = hero
+        ? -hero.getBoundingClientRect().top / heroTravel
+        : 0;
+      const foregroundBehindNav =
+        heroProgress >= 0.55 &&
+        (hero?.getBoundingClientRect().bottom ?? 0) > navHeight;
 
       setScrolled(
-        nextSection
-          ? nextSection.getBoundingClientRect().top <= navHeight
-          : false,
+        foregroundBehindNav ||
+          (nextSection
+            ? nextSection.getBoundingClientRect().top <= navHeight
+            : false),
       );
     };
 
@@ -92,7 +103,12 @@ export function Nav() {
             ))}
           </nav>
 
-          <Button href="#kontakt" size="compact" className="hidden lg:block">
+          <Button
+            href="#kontakt"
+            size="compact"
+            className="hidden lg:block"
+            opensContactDialog
+          >
             Projekt starten
           </Button>
 
@@ -145,6 +161,7 @@ export function Nav() {
         <Button
           href="#kontakt"
           onClick={() => setOpen(false)}
+          opensContactDialog
           className="mt-auto block w-full lg:hidden [&>a]:w-full"
         >
           Projekt starten

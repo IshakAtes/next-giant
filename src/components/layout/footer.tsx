@@ -52,10 +52,10 @@ export function Footer() {
             Website bis zum automatisierten Geschäftsprozess.
           </p>
           <a
-            href="mailto:hello@nextgiant.de"
+            href="mailto:office@nextgiant.de"
             className="decoration-accent/40 hover:text-accent mt-8 inline-block text-sm font-semibold underline transition-colors"
           >
-            hello@nextgiant.de
+            office@nextgiant.de
           </a>
         </div>
 

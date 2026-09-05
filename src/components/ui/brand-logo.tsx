@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { cn } from "@/lib/utils";
 
 interface BrandLogoProps {
@@ -12,13 +14,12 @@ export function BrandLogo({ className }: BrandLogoProps) {
         className,
       )}
     >
-      <span
-        aria-hidden
-        className="h-[1.16em] w-[2em] shrink-0 bg-[url('/images/nextgiant/brand-lockup-reference.png')] bg-no-repeat mix-blend-multiply"
-        style={{
-          backgroundPosition: "-0.838em -0.612em",
-          backgroundSize: "8.829em 2.417em",
-        }}
+      <Image
+        src="/images/nextgiant/brand-mark.png"
+        alt=""
+        width={72}
+        height={51}
+        className="h-[1.16em] w-auto shrink-0"
       />
       <span className="font-display text-[0.86em] font-extrabold tracking-[-0.055em]">
         NextGiant

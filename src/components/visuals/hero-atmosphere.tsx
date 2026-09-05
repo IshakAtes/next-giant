@@ -37,24 +37,45 @@ export function HeroAtmosphere({ className }: HeroAtmosphereProps) {
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 50);
     camera.position.z = 8;
 
-    const count = small ? 26 : 64;
+    const count = small ? 48 : 96;
     const positions = new Float32Array(count * 3);
     const seeds = new Float32Array(count);
     for (let index = 0; index < count; index += 1) {
-      positions[index * 3] = (Math.random() - 0.5) * 13;
-      positions[index * 3 + 1] = (Math.random() - 0.5) * 7;
+      const nearBusinessman = index < count * 0.68;
+      positions[index * 3] = nearBusinessman
+        ? 0.7 + Math.random() * 3.9
+        : (Math.random() - 0.5) * 13;
+      positions[index * 3 + 1] = nearBusinessman
+        ? (Math.random() - 0.5) * 4.8
+        : (Math.random() - 0.5) * 7;
       positions[index * 3 + 2] = (Math.random() - 0.5) * 5;
       seeds[index] = Math.random() * Math.PI * 2;
     }
     const basePositions = positions.slice();
 
+    const particleCanvas = document.createElement("canvas");
+    particleCanvas.width = 32;
+    particleCanvas.height = 32;
+    const particleContext = particleCanvas.getContext("2d");
+    if (particleContext) {
+      const glow = particleContext.createRadialGradient(16, 16, 0, 16, 16, 16);
+      glow.addColorStop(0, "rgba(255,255,255,1)");
+      glow.addColorStop(0.24, "rgba(255,255,255,.92)");
+      glow.addColorStop(0.58, "rgba(255,255,255,.32)");
+      glow.addColorStop(1, "rgba(255,255,255,0)");
+      particleContext.fillStyle = glow;
+      particleContext.fillRect(0, 0, 32, 32);
+    }
+    const particleTexture = new THREE.CanvasTexture(particleCanvas);
+
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     const material = new THREE.PointsMaterial({
       color: 0xffffff,
-      size: small ? 0.028 : 0.034,
+      size: small ? 0.054 : 0.064,
       transparent: true,
-      opacity: 0.62,
+      opacity: 0.76,
+      map: particleTexture,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
@@ -84,14 +105,20 @@ export function HeroAtmosphere({ className }: HeroAtmosphereProps) {
       const time = (now - startTime) * 0.00012;
       const attribute = geometry.attributes.position as THREE.BufferAttribute;
       for (let index = 0; index < count; index += 1) {
+        const baseX = basePositions[index * 3] ?? 0;
         const baseY = basePositions[index * 3 + 1] ?? 0;
+        attribute.setX(
+          index,
+          baseX + Math.sin(time * 2.4 + (seeds[index] ?? 0)) * 0.09,
+        );
         attribute.setY(
           index,
-          baseY + Math.sin(time * 4 + (seeds[index] ?? 0)) * 0.12,
+          baseY + Math.sin(time * 3.2 + (seeds[index] ?? 0)) * 0.16,
         );
       }
       attribute.needsUpdate = true;
-      points.rotation.y = Math.sin(time) * 0.025;
+      material.opacity = 0.7 + Math.sin(time * 5) * 0.1;
+      points.rotation.y = Math.sin(time) * 0.035;
       renderer.render(scene, camera);
       frame = requestAnimationFrame(render);
     };
@@ -123,6 +150,7 @@ export function HeroAtmosphere({ className }: HeroAtmosphereProps) {
       visibilityObserver?.disconnect();
       geometry.dispose();
       material.dispose();
+      particleTexture.dispose();
       renderer.dispose();
     };
   }, []);
@@ -130,6 +158,15 @@ export function HeroAtmosphere({ className }: HeroAtmosphereProps) {
   return (
     <div ref={wrapRef} className={className} aria-hidden>
       <canvas ref={canvasRef} className="block h-full w-full" />
+      <div className="hero-wind-leaves">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="hero-fog hero-fog--far" />
+      <div className="hero-fog hero-fog--near" />
     </div>
   );
 }
