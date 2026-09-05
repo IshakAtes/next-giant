@@ -224,7 +224,7 @@ a {
 .hero-wind-leaves span {
   position: absolute;
   top: 34%;
-  left: -3%;
+  left: 103%;
   width: 8px;
   height: 4px;
   border-radius: 100% 0 100% 0;
@@ -310,7 +310,7 @@ a {
   94%,
   100% {
     opacity: 0;
-    transform: translate3d(62vw, 10vh, 0) rotate(620deg);
+    transform: translate3d(-62vw, 10vh, 0) rotate(620deg);
   }
 }
 
